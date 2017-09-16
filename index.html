@@ -129,16 +129,6 @@ function init() {
   renderer2.autoClear = false;
   canvas2 = renderer2.domElement;  
   document.body.appendChild(canvas2);  
-        effect = new THREE.AsciiEffect( renderer2, ' .:-=+*#%@', {'color':true});
-        effect.setSize(window.innerWidth, window.innerHeight);
-        ascii = effect.domElement;
-        ascii.style.backgroundColor = 'white';
-        //ascii.style.te
-        ascii.style.position = "absolute";
-        ascii.style.color = "#ffffff";
-        ascii.style.left = '0px';
-        ascii.style.top = '0px';
-       document.body.appendChild( ascii );
 
 
 
@@ -149,12 +139,17 @@ function init() {
   renderer.autoClear = false;
   renderer.setClearColor( 0x000000, 0 );
   canvas = renderer.domElement;  
-        canvas.style.backgroundColor = 'transparent';
-        //canvas.style.te
-        canvas.style.position = "absolute";
-        canvas.style.left = '0px';
-        canvas.style.top = '0px';
-  document.body.appendChild(canvas);      
+  //document.body.appendChild(canvas); 
+        effect = new THREE.AsciiEffect( renderer, ' .:-=+*#%@', {'color':true,'resolution':.08});
+        effect.setSize(window.innerWidth, window.innerHeight);
+        ascii = effect.domElement;
+        ascii.style.backgroundColor = 'transparent';
+        //ascii.style.te
+        ascii.style.position = "absolute";
+        ascii.style.color = "white";
+        ascii.style.left = '0px';
+        ascii.style.top = '0px';
+       document.body.appendChild( ascii );     
 
   scene = new THREE.Scene();
   scene2 = new THREE.Scene();
@@ -188,7 +183,7 @@ function init() {
 
   // Create the cube geometry that we'll copy and place in the
   // scene when the user clicks the screen
-  var geometry = new THREE.BoxGeometry( 0.05, 0.05, 0.05 );
+  var geometry = new THREE.BoxGeometry( 0.1, 0.1, 0.1 );
   var faceIndices = ['a', 'b', 'c'];
   for (var i = 0; i < geometry.faces.length; i++) {
     var f  = geometry.faces[i];
@@ -197,12 +192,12 @@ function init() {
       f.vertexColors[j] = colors[vertexIndex];
     }
   }
-  var material = new THREE.MeshBasicMaterial({ vertexColors: THREE.VertexColors });
+  var material = new THREE.MeshBasicMaterial({vertexColors: THREE.VertexColors});
   cube = new THREE.Mesh(geometry, material);
 
   // Bind our event handlers
   window.addEventListener('resize', onWindowResize, false);
-  canvas.addEventListener('touchstart', onClick, false);
+  ascii.addEventListener('touchstart', onClick, false);
 
   // Kick off the render loop!
   update();
@@ -231,9 +226,11 @@ function update() {
   // Render our three.js virtual scene
   // renderer2.clear();
   renderer2.clearDepth();
-        effect.render( scene, camera );
+        renderer2.render( scene, camera );
     renderer.clearDepth();
-    renderer.render(scene2, camera);
+  //  renderer.render(scene2, camera);
+  renderer.clear();
+    effect.render(scene2, camera);
 
   // Kick off the requestAnimationFrame to call this function
   // on the next frame

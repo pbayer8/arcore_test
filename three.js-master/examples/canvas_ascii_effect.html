@@ -33,6 +33,17 @@
 			var effect;
 
 			var sphere, plane;
+			var cube;
+			var colors = [
+  new THREE.Color( 0xffffff ),
+  new THREE.Color( 0xffff00 ),
+  new THREE.Color( 0xff00ff ),
+  new THREE.Color( 0xff0000 ),
+  new THREE.Color( 0x00ffff ),
+  new THREE.Color( 0x00ff00 ),
+  new THREE.Color( 0x0000ff ),
+  new THREE.Color( 0x000000 )
+];
 
 			var start = Date.now();
 
@@ -64,16 +75,19 @@
 				scene = new THREE.Scene();
 				scene.background = new THREE.Color( 0xf0f0f0 );
 
-				var light = new THREE.PointLight( 0xffffff );
-				light.position.set( 500, 500, 500 );
-				scene.add( light );
-
-				var light = new THREE.PointLight( 0xffffff, 0.25 );
-				light.position.set( - 500, - 500, - 500 );
-				scene.add( light );
-
-				sphere = new THREE.Mesh( new THREE.SphereGeometry( 200, 20, 10 ), new THREE.MeshLambertMaterial() );
-				scene.add( sphere );
+  var geometry = new THREE.BoxGeometry( 300, 300, 300 );
+  var faceIndices = ['a', 'b', 'c'];
+   for (var i = 0; i < geometry.faces.length; i++) {
+     var f  = geometry.faces[i];
+     for (var j = 0; j < 3; j++) {
+       var vertexIndex = f[faceIndices[ j ]];
+       f.vertexColors[j] = colors[vertexIndex];
+     }
+   }
+   var material = new THREE.MeshBasicMaterial({ vertexColors: THREE.VertexColors });
+  				cube = new THREE.Mesh(geometry, material);
+				sphere = new THREE.Mesh( new THREE.SphereGeometry( 200, 20, 10 ), new THREE.MeshBasicMaterial({color: 0x00ff00}));
+				scene.add( cube );
 
 				// Plane
 
@@ -86,9 +100,12 @@
 				renderer.setSize( width, height );
 				// container.appendChild( renderer.domElement );
 
-				effect = new THREE.AsciiEffect( renderer );
+				// effect = new THREE.AsciiEffect( renderer );
+        effect = new THREE.AsciiEffect( renderer, ' .:-=+*#%@', {'color':true});
 				effect.setSize( width, height );
-				container.appendChild( effect.domElement );
+				var canv = effect.domElement;
+				canv.style.color = "red";
+				container.appendChild( canv);
 
 				stats = new Stats();
 				container.appendChild( stats.dom );
